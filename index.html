@@ -99,11 +99,43 @@
                 opacity: 0;
             }
         }
+
+        #loadingBar {
+            width: 300px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 20px;
+            display: none;
+        }
+
+        #loadingBarInner {
+            height: 100%;
+            width: 0;
+            background-color: #8904C7;
+            transition: width 0.1s linear;
+        }
+
+        #statusMessage {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h1>Get Ready to Hack!</h1>
     <button id="playButton">Hacking Time</button>
+
+    <div id="loadingBar">
+        <div id="loadingBarInner"></div>
+    </div>
+
+    <div id="statusMessage">Hacking in progress...</div>
 
     <div id="video-container">
         <div id="tdfw"></div>
@@ -140,11 +172,39 @@
         function onPlayerReady(event) {
             document.getElementById('playButton').addEventListener('click', function() {
                 console.log('Button clicked, starting party');
+
+                // Replace button with loading bar
+                var button = document.getElementById('playButton');
+                button.style.display = 'none';
+                var loadingBar = document.getElementById('loadingBar');
+                loadingBar.style.display = 'block';
+
+                // Show status message
+                var statusMessage = document.getElementById('statusMessage');
+                statusMessage.style.display = 'block';
+
+                // Start loading animation
+                simulateLoadingBar();
+
+                // Start video and pizza rain
                 document.getElementById('video-container').style.display = 'block';
                 document.getElementById('spinner').style.display = 'block';
                 player.playVideo();
                 startPizzaRain();
             });
+        }
+
+        function simulateLoadingBar() {
+            var progress = 0;
+            var interval = setInterval(function() {
+                if (progress >= 90) {
+                    clearInterval(interval);
+                    progress = 90;
+                } else {
+                    progress += (100 - progress) * 0.001; // Exponentially slow down
+                }
+                document.getElementById('loadingBarInner').style.width = progress + '%';
+            }, 200);
         }
 
         function startPizzaRain() {
