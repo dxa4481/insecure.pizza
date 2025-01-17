@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacking Time</title>
+    <style>
+        :root {
+            --spin-rate: 10s; /* Configure spin rate here (e.g., 1s for 1 second per rotation) */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #121212;
+            overflow: hidden;
+            flex-direction: column;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #8904C7;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #6E4980;
+        }
+
+        button:active {
+            background-color: #4A2F5C;
+        }
+
+        #video-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+            display: none;
+        }
+
+        iframe {
+            width: 300px;
+            height: 200px;
+            border: none;
+        }
+
+        .spinner {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            animation: spin var(--spin-rate) linear infinite;
+            display: none;
+        }
+
+        .spinner img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .pizza {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('/pizza.png');
+            background-size: cover;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-150px);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Get Ready to Hack!</h1>
+    <button id="playButton">Hacking Time</button>
+
+    <div id="video-container">
+        <div id="tdfw"></div>
+    </div>
+
+    <div class="spinner" id="spinner">
+        <img src="/ben.jpg" alt="Spinning Image">
+    </div>
+
+    <script>
+        var player;
+
+        function embedVideo() {
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            document.body.appendChild(tag);
+
+            window.onYouTubeIframeAPIReady = function() {
+                player = new YT.Player('tdfw', {
+                    height: '200',
+                    width: '305',
+                    videoId: 'PGNiXGX2nLU', // Replace with your video ID
+                    playerVars: {
+                        autoplay: 0, // Do not autoplay initially
+                        controls: 0
+                    },
+                    events: {
+                        'onReady': onPlayerReady
+                    }
+                });
+            };
+        }
+
+        function onPlayerReady(event) {
+            document.getElementById('playButton').addEventListener('click', function() {
+                console.log('Button clicked, starting party');
+                document.getElementById('video-container').style.display = 'block';
+                document.getElementById('spinner').style.display = 'block';
+                player.playVideo();
+                startPizzaRain();
+            });
+        }
+
+        function startPizzaRain() {
+            setInterval(function() {
+                var pizza = document.createElement('div');
+                pizza.className = 'pizza';
+                pizza.style.left = Math.random() * window.innerWidth + 'px';
+
+                // Assign a random animation duration
+                var fallDuration = Math.random() * 3 + 3; // Between 3s and 6s
+                pizza.style.animationDuration = fallDuration + 's';
+
+                document.body.appendChild(pizza);
+                setTimeout(function() {
+                    pizza.remove();
+                }, fallDuration * 1000);
+            }, 300);
+        }
+
+        embedVideo();
+    </script>
+</body>
+</html>
+
